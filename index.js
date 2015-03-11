@@ -1,6 +1,6 @@
-var Mocha = require('mocha'),
-    Fs = require('fs'),
-    Path = require('path'),
+var Mocha = require("mocha"),
+    Fs = require("fs"),
+    Path = require("path"),
     Flags = require("minimist")( process.argv.slice(2) ),
     root = Flags.root || process.cwd(),
     testDir = Path.join(root, "test");
@@ -22,8 +22,7 @@ if (!Fs.existsSync(testDir)) {
 // make coffeescript available
 require("coffee-script/register");
 
-// First, you need to instantiate a Mocha instance.
-reporter = process.env.CI ? 'xunit-file' : 'spec'
+
 
 // CI saving of tests output to the right place
 var circleDir = process.env.CIRCLE_TEST_REPORTS || Flags.CIRCLE_TEST_REPORTS;
@@ -45,7 +44,10 @@ if (circleDir) {
   )
 }
 
-require('xunit-file');
+
+// Lets set the reporter here
+reporter = process.env.CI ? require("xunit-file") : "spec"
+
 
 var mocha = new Mocha({
   reporter: reporter
@@ -57,7 +59,7 @@ var mocha = new Mocha({
 // Here is an example:
 Fs.readdirSync(testDir).filter(function(file){
   // Only keep the .js / .coffee files
-  return file.substr(-7) === '.coffee' || file.substr(-3) === '.js';
+  return file.substr(-7) === ".coffee" || file.substr(-3) === ".js";
 
 }).forEach(function(file){
   // Use the method "addFile" to add the file to mocha
@@ -69,7 +71,7 @@ Fs.readdirSync(testDir).filter(function(file){
 
 // Now, you can run the tests.
 mocha.run(function(failures){
-  process.on('exit', function () {
+  process.on("exit", function () {
     process.exit(failures);
   });
 });
